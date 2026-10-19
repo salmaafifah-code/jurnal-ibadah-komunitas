@@ -2,6 +2,31 @@ const rolePanel = document.querySelector("#role-panel");
 const roleTitle = document.querySelector("#role-title");
 const roleContent = document.querySelector("#role-content");
 
+const roleStyles = document.createElement("style");
+roleStyles.textContent = `
+  .role-panel { box-sizing:border-box; width:min(calc(100% - 2rem),1100px); margin:1.5rem auto 3rem; padding:clamp(1rem,4vw,2rem); border:1px solid #d6e3db; border-radius:1.25rem; background:#fff; box-shadow:0 16px 42px rgb(30 77 51 / 8%); }
+  .role-panel h1,.role-panel h2 { color:#087a4b; }
+  .role-card { box-sizing:border-box; margin:1rem 0; padding:1rem; border:1px solid #d6e3db; border-radius:1rem; background:#f8fbf9; }
+  .role-card h2,.role-card h3 { margin-top:0; }
+  .role-form { display:grid; grid-template-columns:1fr; gap:.8rem; margin:1rem 0; }
+  .role-inline-form { grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); align-items:end; }
+  .role-field { display:grid; min-width:0; gap:.35rem; color:#234333; }
+  .role-field input,.role-field select,.role-field textarea { box-sizing:border-box; width:100%; min-height:2.8rem; padding:.55rem .7rem; border:1px solid #d6e3db; border-radius:.65rem; background:#fff; font:inherit; }
+  .role-field textarea { resize:vertical; }
+  .role-panel button { width:fit-content; min-height:2.7rem; padding:.55rem .85rem; border:1px solid #087a4b; border-radius:.65rem; background:#087a4b; color:#fff; font:inherit; font-weight:700; cursor:pointer; }
+  .role-panel button:disabled { opacity:.65; cursor:wait; }
+  .role-status { min-height:1.25rem; color:#416b52; }
+  .role-status.error { color:#9b3029; }
+  .role-management { margin-top:1rem; }
+  .role-list { padding-left:1.3rem; }
+  .student-card { margin:.8rem 0; padding:1rem; border:1px solid #d6e3db; border-radius:.85rem; background:#fff; }
+  .student-card h3 { margin:0; color:#087a4b; }
+  .student-activity-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:.35rem 1rem; padding-left:1.25rem; }
+  .role-muted { color:#64766b; }
+  @media(max-width:480px) { .role-panel { width:calc(100% - 1.25rem); padding:.85rem; } .role-inline-form { grid-template-columns:1fr; } }
+`;
+document.head.append(roleStyles);
+
 function el(tag, text, className) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
