@@ -774,56 +774,6 @@ async function tampilkanJurnalSantri(membership, profile) {
   }
 }
 
-window.addEventListener("jurnal:session", async (event) => {
-  const { profile, memberships, client } = event.detail;
-  const studentMemberships = memberships.filter((membership) => membership.role === "student");
-  const communitySelect = document.querySelector("#community-select");
-  const main = document.querySelector("main");
-  const setupMessage = document.querySelector("#setup-message");
-  const setupDetail = document.querySelector("#setup-detail");
-
-  main.hidden = true;
-  if (!studentMemberships.length) {
-    communitySelect.hidden = true;
-    setupMessage.hidden = false;
-    setupDetail.textContent = profile?.is_admin
-      ? "Akun superadmin dikenali. Panel pengelolaan komunitas akan disiapkan berikutnya."
-      : memberships.some((membership) => membership.role === "teacher")
-        ? "Akun guru dikenali. Panel pemantauan santri akan disiapkan berikutnya."
-        : "Akun belum memiliki keanggotaan santri di komunitas.";
-    return;
-  }
-
-  try {
-    const ids = [...new Set(studentMemberships.map((membership) => membership.community_id))];
-    const { data: communities, error } = await client.from("communities")
-      .select("id, name")
-      .in("id", ids);
-    if (error) throw error;
-    const nameById = new Map((communities || []).map((community) => [community.id, community.name]));
-    communitySelect.replaceChildren();
-    studentMemberships.forEach((membership) => {
-      const option = document.createElement("option");
-      option.value = membership.id;
-      option.textContent = nameById.get(membership.community_id) || "Komunitas";
-      communitySelect.append(option);
-    });
-    communitySelect.hidden = studentMemberships.length < 2;
-
-    const muatPilihan = async () => {
-      const membership = studentMemberships.find((item) => item.id === communitySelect.value)
-        || studentMemberships[0];
-      await tampilkanJurnalSantri(membership, profile);
-    };
-    communitySelect.onchange = muatPilihan;
-    communitySelect.value = studentMemberships[0].id;
-    await muatPilihan();
-  } catch (error) {
-    setupMessage.hidden = false;
-    setupDetail.textContent = `Komunitas gagal dimuat: ${error.message}`;
-  }
-});
-
 if ("serviceWorker" in navigator && window.isSecureContext) {
   navigator.serviceWorker.getRegistration("./").then(async (registration) => {
     if (!registration) return;
