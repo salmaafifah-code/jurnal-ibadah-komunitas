@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#245c3a">
+    <title>Jurnal Ibadah Harian</title>
+</head>
+
+<body>
+    <section id="auth-panel" class="auth-panel" aria-labelledby="auth-title">
+        <h1 id="auth-title">Jurnal Ibadah Harian</h1>
+        <p class="auth-intro">Masuk untuk menggunakan akun jurnalmu.</p>
+        <form id="auth-form" class="auth-form">
+            <label for="auth-email">Email</label>
+            <input id="auth-email" type="email" autocomplete="username" required>
+            <label for="auth-password">Kata sandi</label>
+            <input id="auth-password" type="password" autocomplete="current-password" minlength="6" required>
+            <label for="auth-display-name" id="auth-name-label" hidden>Nama</label>
+            <input id="auth-display-name" type="text" autocomplete="name" hidden>
+            <div class="auth-actions">
+                <button id="auth-submit" type="submit">Masuk</button>
+                <button id="auth-toggle" type="button">Buat akun</button>
+            </div>
+            <p id="auth-message" class="auth-message" role="status" aria-live="polite"></p>
+        </form>
+    </section>
+
+    <section id="account-panel" class="account-panel" hidden>
+        <div>
+            <strong id="account-name"></strong>
+            <span id="account-role"></span>
+        </div>
+        <select id="community-select" aria-label="Pilih komunitas" hidden></select>
+        <button id="auth-signout" type="button">Keluar</button>
+    </section>
+
+    <section id="setup-message" class="setup-message" hidden aria-live="polite">
+        <h2>Akun tersambung</h2>
+        <p id="setup-detail"></p>
+        <p>Langkah berikutnya adalah menghubungkan isi jurnal dan rekap ke database agar tersimpan di akun ini.</p>
+    </section>
+
+    <main hidden>
+        <h1>Jurnal Ibadah Harian</h1>
+
+        <nav class="tab-list" role="tablist" aria-label="Bagian jurnal">
+            <button class="tab-button" id="tab-jurnal" type="button" role="tab" aria-selected="true"
+                aria-controls="panel-jurnal">Isi Jurnal</button>
+            <button class="tab-button" id="tab-rekap" type="button" role="tab" aria-selected="false"
+                aria-controls="panel-rekap">Rekap</button>
+        </nav>
+
+        <section id="panel-jurnal" class="tab-panel" role="tabpanel" aria-labelledby="tab-jurnal">
+            <header class="jurnal-intro">
+                <h2>Isi jurnal ibadah</h2>
+                <p>Tandai ibadah yang sudah dilakukan hari ini.</p>
+            </header>
+
+            <div class="tanggal-card">
+                <label for="tanggal">Tanggal jurnal</label>
+                <input id="tanggal" name="tanggal" type="date">
+            </div>
+
+            <details class="kelola-ibadah">
+                <summary>Atur daftar ibadah</summary>
+                <p class="kelola-ibadah-petunjuk">Tambahkan ibadah, ubah nama atau kelompoknya, dan hapus yang tidak diperlukan.</p>
+                <form id="form-ibadah">
+                    <label for="nama-ibadah">Nama ibadah</label>
+                    <input id="nama-ibadah" type="text" maxlength="80" required placeholder="Contoh: Membaca Al-Kahfi">
+                    <label for="kelompok-ibadah">Kelompok</label>
+                    <select id="kelompok-ibadah" required>
+                        <option>Salat dan sunnah</option>
+                        <option>Salat Rawatib</option>
+                        <option>Al-Qur’an dan dzikir</option>
+                        <option>Amal kebaikan</option>
+                    </select>
+                    <div class="kelola-form-aksi">
+                        <button id="simpan-ibadah" type="submit">Tambah ibadah</button>
+                        <button id="batal-edit-ibadah" type="button" hidden>Batal</button>
+                    </div>
+                </form>
+                <ul id="daftar-ibadah-kelola" class="daftar-ibadah-kelola"></ul>
+                <p id="pesan-kelola-ibadah" class="pesan-kelola-ibadah" role="status" aria-live="polite"></p>
+            </details>
+
+            <div id="tilawah-card" class="tilawah-card">
+                <label for="tilawah">Tilawah Al-Qur’an</label>
+                <div class="tilawah-input-baris">
+                    <input id="tilawah" name="tilawah" type="number" min="0" value="0" inputmode="numeric">
+                    <span>lembar</span>
+                </div>
+            </div>
+            <div id="daftar-ibadah"></div>
+
+            <div class="jurnal-aksi">
+                <button id="simpan" type="button">Simpan jurnal</button>
+                <p id="pesan" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="panel-rekap" class="tab-panel" role="tabpanel" aria-labelledby="tab-rekap" hidden>
+            <h2>Rekap ibadah</h2>
+
+            <label for="nama-pdf">Nama pada PDF</label>
+            <input id="nama-pdf" type="text" maxlength="80" autocomplete="name" placeholder="Masukkan nama">
+
+            <label for="rekap-dari">Tanggal mulai</label>
+            <input id="rekap-dari" type="date">
+
+            <label for="rekap-sampai">Tanggal akhir</label>
+            <input id="rekap-sampai" type="date">
+
+            <button id="buat-rekap" type="button">Buat rekap</button>
+            <button id="cetak-rekap" type="button" hidden>Cetak / simpan rekap sebagai PDF</button>
+            <div id="hasil-rekap" aria-live="polite"></div>
+        </section>
+
+    </main>
+    <section id="dokumen-rekap" class="dokumen-rekap" aria-label="Rekap ibadah untuk dicetak" hidden></section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
